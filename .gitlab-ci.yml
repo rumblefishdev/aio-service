@@ -1,0 +1,23 @@
+stages:
+  - test
+  - build_wheel
+
+test-job:
+  image: 974556904237.dkr.ecr.eu-central-1.amazonaws.com/docker-compose:latest
+  stage: test
+  script:
+    - echo "---> Building test image and running tests"
+    - docker-compose --project-name=$CI_BUILD_ID build tests-pipeline
+    - docker-compose --project-name=$CI_BUILD_ID run --rm tests-pipeline
+  after_script:
+    - docker-compose --project-name=$CI_BUILD_ID down
+
+build_wheel_job:
+  image: 974556904237.dkr.ecr.eu-central-1.amazonaws.com/wheeler:latest
+  stage: build_wheel
+  only:
+    - master
+  script:
+    - echo "Building wheel..."
+    - python setup.py bdist_wheel
+    - twine upload -r pypiserver dist/*

@@ -1,0 +1,16 @@
+*.py[cod]
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+sdist
+__pycache__
+
+.cache
+.mypy_cache
+
+# Installer logs
+pip-log.txt

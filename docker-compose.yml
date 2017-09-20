@@ -1,0 +1,61 @@
+version: '2.1'
+services:
+
+  shell:
+    extends:
+      file: docker-compose.base.yml
+      service: tests-base
+    links:
+      - redis-tests
+    environment:
+      - PIP_EXTRA_INDEX_URL=$PYPI_PC_URL
+    volumes:
+      - ./:/usr/src/app/
+    command: bash -C "pip install ipython && ipython"
+
+####### Redis
+
+  redis-tests:
+    mem_limit: 32m
+    image: redis:alpine
+
+######## postgres
+
+  db-tests:
+    image: postgres:9-alpine
+
+
+####### TESTS
+
+  tests:
+    extends:
+      file: docker-compose.base.yml
+      service: tests-base
+    container_name: aio-service-tests
+    volumes:
+      - ./:/usr/src/app/
+    links:
+      - redis-tests
+    command: bash -c "python setup.py test"
+
+
+  full_tests:
+    extends:
+      file: docker-compose.base.yml
+      service: tests-base
+    container_name: aio-service-full_tests
+    volumes:
+      - ./:/usr/src/app/
+    links:
+      - redis-tests
+    command: bash -c "python setup.py test && mypy aio_service -v"
+
+
+  tests-pipeline:
+    extends:
+      file: docker-compose.base.yml
+      service: tests-base
+    container_name: aio-service-pipeline-tests
+    links:
+      - redis-tests
+    command: bash -c "python setup.py test && mypy aio_service -v"

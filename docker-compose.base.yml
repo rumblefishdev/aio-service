@@ -1,0 +1,19 @@
+version: '2.1'
+services:
+
+  env_base:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - PIP_EXTRA_INDEX_URL=$PYPI_PC_URL
+    environment:
+      - PIP_EXTRA_INDEX_URL=$PYPI_PC_URL
+
+  tests-base:
+    image: aio-service-tests
+    extends: env_base
+    environment:
+      - TEST_REDIS_URL=redis://redis-tests:6379/0
+      - TEST_POSTGRES_URL=postgresql+pool://postgres@db-tests:5432/postgres
+      - TEST_LOGGING_LEVEL=ERROR
