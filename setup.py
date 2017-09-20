@@ -10,9 +10,10 @@ BASE_DIR = path.abspath(path.dirname(__file__))
 
 def load_require(name):
     with open(path.join(BASE_DIR, 'requirements', name)) as p:
-        return list(
-            filter(len, [l.strip() for l in p])
-        )
+        return list(filter(
+            lambda l: len(l) and not l.startswith('#'),
+            [l.strip() for l in p]
+        ))
 
 
 with codecs.open(path.join(BASE_DIR, 'README.md'), encoding='utf-8') as f:
