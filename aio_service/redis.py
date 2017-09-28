@@ -48,7 +48,7 @@ async def destroy_redis_pool(app: App) -> None:
 
 async def create_redis_pool(app: App) -> None:
     config = get_config(app)
-    logger.error(config.redis_url)
+    logger.info(config.redis_url)
     app.ctx[REDIS_POOL_KEY] = await aioredis.create_pool(
         loop=app.loop,
         maxsize=1000,
