@@ -42,7 +42,7 @@ def test_get_env_calls_in_Config_prefix(mocker):
     assert get_env.call_args_list == [
         call(env, 'REDIS_URL', 'redis://localhost/0', prefix),
         call(env, 'POSTGRES_URL', '', prefix),
-        call(env, 'SENTRY_DNS', '', prefix),
+        call(env, 'SENTRY_DSN', '', prefix),
         call(env, 'LOGGING_LEVEL', 'ERROR', prefix),
     ]
 
