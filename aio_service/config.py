@@ -22,7 +22,7 @@ class Config:
         self.prefix = prefix
         self.redis_url = self.get_env('REDIS_URL', 'redis://localhost/0')
         self.postgres_url = self.get_env('POSTGRES_URL', '')
-        self.sentry_dsn = self.get_env('SENTRY_DNS', '')
+        self.sentry_dsn = self.get_env('SENTRY_DSN', '')
         self.logging_level = getattr(
             logging,
             self.get_env('LOGGING_LEVEL', 'ERROR'),
