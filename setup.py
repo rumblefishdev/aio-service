@@ -3,7 +3,7 @@ import codecs
 from os import path
 from setuptools import setup, find_packages
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 BASE_DIR = path.abspath(path.dirname(__file__))
 
