@@ -9,3 +9,4 @@ pytest-capturelog==0.7
 mypy==0.521
 pytest-async-fixtures==0.1.6
 pytest-peewee-async==0.2.0
+asynctest==0.10.1
