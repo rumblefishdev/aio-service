@@ -16,7 +16,7 @@ build_wheel_job:
   image: 974556904237.dkr.ecr.eu-central-1.amazonaws.com/wheeler:latest
   stage: build_wheel
   only:
-    - master
+    - develop
   script:
     - echo "Building wheel..."
     - python setup.py bdist_wheel
