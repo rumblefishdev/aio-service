@@ -1,15 +1,12 @@
-from typing import Callable
 import asyncio
 import json
 import logging
-from itertools import cycle
 from collections import namedtuple
+from itertools import cycle
+from typing import Callable
 
 from .app import App
-from .redis import (
-    get_redis_pool
-)
-
+from .redis import get_redis_pool
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +14,7 @@ logger = logging.getLogger(__name__)
 Result = namedtuple('Result', ['topic', 'message'],)
 
 
-async def create_dispatcher(app: App) -> Callable:
+def create_dispatcher(app: App) -> Callable:
     pool = get_redis_pool(app)
     loop = app.loop
 
@@ -34,14 +31,14 @@ async def create_dispatcher(app: App) -> Callable:
     return dispatcher
 
 
-async def create_subscriber(app: App) -> Callable:
+def create_subscriber(app: App, topic_timeout: int = 1) -> Callable:
     pool = get_redis_pool(app)
 
     async def subscriber(topics=[], *a, **kw):
         for topic in cycle(topics):
             async with pool.get() as conn:
                 result = await conn.blpop(
-                    topic, *a, timeout=1, **kw
+                    topic, *a, timeout=topic_timeout, **kw
                 )
             if result:
                 break
@@ -55,6 +52,6 @@ async def create_subscriber(app: App) -> Callable:
     return subscriber
 
 
-async def add_queues(app: App) -> None:
-    app.ctx['subscribe'] = await create_subscriber(app)
-    app.ctx['dispatch'] = await create_dispatcher(app)
+async def add_queues(app: App, topic_timeout: int = 1) -> None:
+    app.ctx['subscribe'] = create_subscriber(app, topic_timeout)
+    app.ctx['dispatch'] = create_dispatcher(app)

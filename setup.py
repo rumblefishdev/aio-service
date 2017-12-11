@@ -3,7 +3,7 @@ from os import path
 
 from setuptools import find_packages, setup
 
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 BASE_DIR = path.abspath(path.dirname(__file__))
 
