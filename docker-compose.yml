@@ -39,7 +39,7 @@ services:
     command: bash -c "python setup.py test"
 
 
-  full_tests:
+  full-tests:
     extends:
       file: docker-compose.base.yml
       service: tests-base
