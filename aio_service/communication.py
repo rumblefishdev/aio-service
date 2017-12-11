@@ -2,7 +2,6 @@ import asyncio
 import json
 import logging
 from collections import namedtuple
-from itertools import cycle
 from typing import Callable
 
 from .app import App
@@ -31,27 +30,23 @@ def create_dispatcher(app: App) -> Callable:
     return dispatcher
 
 
-def create_subscriber(app: App, topic_timeout: int = 1) -> Callable:
+def create_subscriber(app: App) -> Callable:
     pool = get_redis_pool(app)
 
     async def subscriber(topics=[], *a, **kw):
-        for topic in cycle(topics):
+        for topic in topics:
             async with pool.get() as conn:
-                result = await conn.blpop(
-                    topic, *a, timeout=topic_timeout, **kw
+                result = await conn.lpop(
+                    topic, *a, **kw
                 )
             if result:
                 break
 
-        topic, msg = result
-        return (Result(
-            topic,
-            json.loads(msg)
-        ), )
+        return (Result(topic, json.loads(result)), )
 
     return subscriber
 
 
-async def add_queues(app: App, topic_timeout: int = 1) -> None:
-    app.ctx['subscribe'] = create_subscriber(app, topic_timeout)
+async def add_queues(app: App) -> None:
+    app.ctx['subscribe'] = create_subscriber(app)
     app.ctx['dispatch'] = create_dispatcher(app)
