@@ -1,5 +1,5 @@
-import logging
 import asyncio
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +35,7 @@ class App:
     def handler(self):
         return self._handler(self)
 
-    async def start(self):
+    async def start(self, loop_sleep=1):
         await self._process_hook(self.on_startup)
         self._started = True
         try:
@@ -45,6 +45,7 @@ class App:
                     await self._pending
                 except Exception as e:
                     logger.exception('handler fail')
+                await asyncio.sleep(loop_sleep)
         finally:
             await self._process_hook(self.on_shutdown)
 
