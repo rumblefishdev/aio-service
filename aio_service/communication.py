@@ -40,9 +40,7 @@ def create_subscriber(app: App) -> Callable:
                     topic, *a, **kw
                 )
             if result:
-                break
-
-        return (Result(topic, json.loads(result)), )
+                yield Result(topic, json.loads(result))
 
     return subscriber
 
