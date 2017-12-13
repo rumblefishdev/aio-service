@@ -4,11 +4,9 @@ from aio_service.app import App
 
 
 async def handler(app):
-    msg = await app.subscribe()
-    if msg:
-        await app.dispatch(msg)
-    else:
-        raise Exception('exception')
+    async for msg in app.subscribe():
+        if msg:
+            await app.dispatch(msg)
 
 
 @pytest.fixture

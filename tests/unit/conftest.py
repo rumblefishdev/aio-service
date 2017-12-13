@@ -25,7 +25,7 @@ def dispatch(q_dispatch):
 @pytest.fixture
 def subscribe(q_subscribe):
     async def s():
-        return await q_subscribe.get()
+        yield await q_subscribe.get()
     return s
 
 
